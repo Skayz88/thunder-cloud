@@ -2,6 +2,7 @@ package ru.system.thundercloud.engine.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import ru.system.thundercloud.engine.db.service.TCLProcessService;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
@@ -20,10 +21,14 @@ import java.util.Objects;
 public class ThunderCloudEngine {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ThunderCloudEngine.class);
+    private static final String VERSION = "0.0.1";
+
+    private final TCLProcessService tclProcessService;
 
     private final Map<String, ThunderCloudProcess> processMap;
 
-    public ThunderCloudEngine(List<ThunderCloudProcess> processes) {
+    public ThunderCloudEngine(List<ThunderCloudProcess> processes, TCLProcessService tclProcessService) {
+        this.tclProcessService = tclProcessService;
         processMap = new HashMap<>();
         for (ThunderCloudProcess process : processes) {
             processMap.put(process.getName(), process);
@@ -33,15 +38,18 @@ public class ThunderCloudEngine {
     @PostConstruct
     public void init() {
         log.info("init...");
-        log.info("version: {}", "0.0.1");
+        log.info("version: {}", VERSION);
         if (Objects.nonNull(processMap) && !processMap.isEmpty()) {
             log.info("processes: {}", Arrays.toString(processMap.keySet().toArray()));
         }
+        onMigrationComplete();
 
     }
 
     public void onMigrationComplete() {
-        log.info("Выполнена задача после миграции");
+        log.info("Выполнена задача после миграции - начало");
+        tclProcessService.checkProcessInDatabase(processMap);
+        log.info("Выполнена задача после миграции - завершение");
     }
 
     public void startProcess(String processName) {
