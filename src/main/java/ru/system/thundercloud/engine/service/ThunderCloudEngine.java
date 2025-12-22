@@ -6,7 +6,6 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ public class ThunderCloudEngine {
     private Map<String, ThunderCloudProcess> processMap;
 
     public ThunderCloudEngine(List<ThunderCloudProcess> processes) {
-        processMap =  new HashMap<>();
+        processMap = new HashMap<>();
         for (ThunderCloudProcess process : processes) {
             processMap.put(process.getName(), process);
         }
@@ -31,6 +30,10 @@ public class ThunderCloudEngine {
     public void init() {
         System.out.println("ThunderCloudEngine init...");
         System.out.println("ThunderCloudProcess count = " + processMap.size());
+    }
+
+    public void onMigrationComplete() {
+        System.out.println("Выполнена задача после миграции");
     }
 
     public void startProcess(String processName) {
