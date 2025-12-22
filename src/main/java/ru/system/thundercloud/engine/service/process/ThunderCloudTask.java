@@ -1,6 +1,8 @@
 package ru.system.thundercloud.engine.service.process;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -11,12 +13,16 @@ public class ThunderCloudTask {
 
     private String id;
     private String name;
-    private LinkedList<ThunderCloudDelegate> delegates =  new LinkedList<>();
+    private List<ThunderCloudDelegate> delegates;
 
-    public ThunderCloudTask(String name, LinkedList<ThunderCloudDelegate> delegates) {
+    public ThunderCloudTask(String name, List<ThunderCloudDelegate> delegates) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.delegates = delegates;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public static ThunderCloudTaskCreator creator() {
@@ -25,7 +31,7 @@ public class ThunderCloudTask {
 
     public static class ThunderCloudTaskCreator {
         private String name;
-        private LinkedList<ThunderCloudDelegate> delegates =  new LinkedList<>();
+        private List<ThunderCloudDelegate> delegates =  new ArrayList<>();
 
         public ThunderCloudTaskCreator() {}
 
@@ -34,7 +40,7 @@ public class ThunderCloudTask {
             return this;
         }
 
-        public ThunderCloudTaskCreator delegates(LinkedList<ThunderCloudDelegate> delegates) {
+        public ThunderCloudTaskCreator delegates(List<ThunderCloudDelegate> delegates) {
             this.delegates = delegates;
             return this;
         }
