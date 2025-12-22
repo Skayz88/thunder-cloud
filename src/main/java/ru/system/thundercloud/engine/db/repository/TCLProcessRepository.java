@@ -6,8 +6,6 @@ import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 import ru.system.thundercloud.engine.db.tables.TCLProcess;
 
-import java.util.Optional;
-
 /**
  *
  * @author DRakovskiy
@@ -16,10 +14,9 @@ public interface TCLProcessRepository extends ListCrudRepository<TCLProcess, Str
 
     // Метод для вставки с контролем конфликтов
     @Modifying
-    @Query(value = """
-        INSERT INTO tcl_process(id, name)
-        VALUES(:id, :name)
-    """)
+    @Query(value = """ 
+            INSERT INTO tcl_process(id, name) VALUES(:id, :name) 
+            """)
     void insertWithConflictHandling(@Param("id") String id, @Param("name") String name);
 
     // Метод для проверки существования записи по id
@@ -27,9 +24,4 @@ public interface TCLProcessRepository extends ListCrudRepository<TCLProcess, Str
 
     // Метод для проверки существования записи по имени
     boolean existsByName(String name);
-
-    // Новый метод для возврата id по имени
-    Optional<String> findIdByName(String name);
-
-
 }
