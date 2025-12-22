@@ -1,6 +1,8 @@
 package ru.system.thundercloud.engine.service.process;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -9,8 +11,6 @@ import java.util.LinkedList;
 public class ThunderCloudGetaway {
     private String id;
     private String name;
-    private String position;
-    private Boolean completed;
-    private String execution_id;
-    private LinkedList<ThunderCloudDelegate> delegates;
+    private List<String> taskListName;
+    private Map<String, ThunderCloudTask> tasks;
 }

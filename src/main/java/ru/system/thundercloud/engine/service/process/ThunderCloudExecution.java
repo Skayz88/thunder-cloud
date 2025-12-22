@@ -1,5 +1,7 @@
 package ru.system.thundercloud.engine.service.process;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author DRakovskiy
@@ -7,7 +9,6 @@ package ru.system.thundercloud.engine.service.process;
 public class ThunderCloudExecution {
     private String id;
     private String name;
-    private String position;
-    private Boolean completed;
-    private String process_id;
+    private ThunderCloudProcess process;
+    private LinkedList<ThunderCloudGetaway> getaways;
 }
