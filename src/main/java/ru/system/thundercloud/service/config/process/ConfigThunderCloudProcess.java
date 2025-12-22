@@ -18,7 +18,7 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
 @Configuration
 public class ConfigThunderCloudProcess {
 
- @Bean
+    @Bean
     public ThunderCloudProcess getThunderCloudProcess() {
 
         ThunderCloudTask tasks = ThunderCloudTask
@@ -36,10 +36,24 @@ public class ConfigThunderCloudProcess {
                 .task(tasks)
                 .create();
 
+        ThunderCloudGetaway getaway2 = ThunderCloudGetaway
+                .creator()
+                .name("getaway-2")
+                .task(tasks)
+                .create();
+
+        ThunderCloudGetaway getaway3 = ThunderCloudGetaway
+                .creator()
+                .name("getaway-3")
+                .task(tasks)
+                .create();
+
         ThunderCloudExecution execution = ThunderCloudExecution
                 .creator()
                 .name("execution-1")
                 .getaway(getaway)
+                .getaway(getaway2)
+                .getaway(getaway3)
                 .create();
 
         return new ThunderCloudProcess("process", execution);
