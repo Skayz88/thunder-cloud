@@ -56,7 +56,7 @@ public class ConfigThunderCloudProcess {
                 .getaway(getaway3)
                 .create();
 
-        return new ThunderCloudProcess("process", execution);
+        return new ThunderCloudProcess("process-1", execution);
 
     }
 

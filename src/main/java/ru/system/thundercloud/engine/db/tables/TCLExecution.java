@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
  *
  * @author DRakovskiy
  */
-@Table(name = "cl_execution")
+@Table(name = "tcl_execution")
 public record TCLExecution(
         @Id String id,
         String name,

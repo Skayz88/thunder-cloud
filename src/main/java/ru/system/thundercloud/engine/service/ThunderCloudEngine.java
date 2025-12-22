@@ -6,10 +6,11 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
 
-import java.sql.SQLOutput;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -18,7 +19,9 @@ import java.util.Map;
 @Service
 public class ThunderCloudEngine {
 
-    private Map<String, ThunderCloudProcess> processMap;
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ThunderCloudEngine.class);
+
+    private final Map<String, ThunderCloudProcess> processMap;
 
     public ThunderCloudEngine(List<ThunderCloudProcess> processes) {
         processMap = new HashMap<>();
@@ -29,12 +32,16 @@ public class ThunderCloudEngine {
 
     @PostConstruct
     public void init() {
-        System.out.println("ThunderCloudEngine init...");
-        System.out.println("ThunderCloudProcess count = " + processMap.size());
+        log.info("init...");
+        log.info("version: {}", "0.0.1");
+        if (Objects.nonNull(processMap) && !processMap.isEmpty()) {
+            log.info("processes: {}", Arrays.toString(processMap.keySet().toArray()));
+        }
+
     }
 
     public void onMigrationComplete() {
-        System.out.println("Выполнена задача после миграции");
+        log.info("Выполнена задача после миграции");
     }
 
     public void startProcess(String processName) {

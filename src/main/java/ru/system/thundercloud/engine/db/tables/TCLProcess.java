@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
  *
  * @author DRakovskiy
  */
-@Table(name = "cl_process")
+@Table(name = "tcl_process")
 public record TCLProcess(
         @Id String id,
         String name
