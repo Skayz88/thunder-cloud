@@ -6,6 +6,7 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
 
+import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class ThunderCloudEngine {
         List<ThunderCloudGetaway> getaways = process.getExecution().getGetaways();
 
         for (ThunderCloudGetaway getaway : getaways) {
+            System.out.println("ThunderCloudGetaway- " + getaway.getName());
             List<String> taskList = getaway.getTaskListName();
             Map<String, ThunderCloudTask> tasks = getaway.getTasks();
             for (String task : taskList) {

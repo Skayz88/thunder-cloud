@@ -23,6 +23,9 @@ public class ThunderCloudGetaway {
         this.tasks = tasks;
     }
 
+    public String getName() {
+        return name;
+    }
 
     public static ThunderCloudGetawayCreator creator() {
         return new ThunderCloudGetawayCreator();
