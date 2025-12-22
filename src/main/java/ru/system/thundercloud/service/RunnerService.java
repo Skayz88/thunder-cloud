@@ -23,7 +23,7 @@ public class RunnerService implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Приложение запущено успешно!");
-        engine.startProcess(process.getName());
+        engine.startNewExecutionForProcess(process.getName());
     }
 
 

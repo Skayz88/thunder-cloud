@@ -3,7 +3,6 @@ package ru.system.thundercloud.engine.db.service;
 import org.springframework.stereotype.Service;
 import ru.system.thundercloud.engine.db.repository.TCLProcessRepository;
 import ru.system.thundercloud.engine.db.tables.TCLProcess;
-import ru.system.thundercloud.engine.service.ThunderCloudEngine;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 
 import java.util.Map;
@@ -23,17 +22,24 @@ public class TCLProcessService {
         this.tclProcessRepository = tclProcessRepository;
     }
 
-    public void checkProcessInDatabase(Map<String, ThunderCloudProcess> processMap) {
-        processMap.keySet().forEach(processName -> {
-            boolean ex = tclProcessRepository.existsByName(processName);
-            System.out.println("Proc: " + processName + ", ex= " + ex);
-            if (!tclProcessRepository.existsByName(processName)) {
-                ThunderCloudProcess process = processMap.get(processName);
-                tclProcessRepository.insertWithConflictHandling(process.getId(), process.getName());
-                log.info("For process- {}: create in Database", processName);
-            } else {
-                log.info("For process- {}: has already been entered", processName);
-            }
+    public TCLProcess getProcessByName(String processName) {
+        return tclProcessRepository.getTCLProcessByName(processName);
+    }
+
+    public void checkProcessesInDatabase(Map<String, ThunderCloudProcess> processMap) {
+        processMap.forEach((processName, thunderCloudProcess) -> {
+            if (!isThisProcessInDatabase(processName))
+                saveProcessIsThisNeeded(thunderCloudProcess);
         });
+    }
+
+    private void saveProcessIsThisNeeded(ThunderCloudProcess process) {
+            tclProcessRepository.insertProcess(process.getId(), process.getName());
+            log.debug("Сохранение процесса {} в таблицу Базы данных", process);
+    }
+
+    private boolean isThisProcessInDatabase(String processName) {
+        log.debug("Проверка процесса - {} в таблице Базы данных", processName);
+        return tclProcessRepository.existsByName(processName);
     }
 }

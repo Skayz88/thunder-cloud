@@ -21,6 +21,10 @@ public class ThunderCloudExecution {
         this.getaways = getaways;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public static ThunderCloudExecutionCreator creator() {
         return new ThunderCloudExecutionCreator();
     }

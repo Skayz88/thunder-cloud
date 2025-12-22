@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS tcl_process
 CREATE TABLE IF NOT EXISTS tcl_execution
 (
     id               VARCHAR(64) PRIMARY KEY,
-    completed        BOOLEAN DEFAULT FALSE,
+    name             VARCHAR(255) NOT NULL,
     process_id       VARCHAR(64) REFERENCES tcl_process (id)
 );
 
