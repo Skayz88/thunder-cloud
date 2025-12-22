@@ -7,11 +7,11 @@
 package ru.system.thundercloud.engine.db.repository;
 
 import org.springframework.data.repository.ListCrudRepository;
-import ru.t1.learning.data_jdbc.jdbc_project.engine.db.tables.CLExecution;
+import ru.system.thundercloud.engine.db.tables.TCLExecution;
 
 /**
  *
  * @author DRakovskiy
  */
-public interface TCLExecutionRepository extends ListCrudRepository<CLExecution, String> {
+public interface TCLExecutionRepository extends ListCrudRepository<TCLExecution, String> {
 }

@@ -1,5 +1,7 @@
 package ru.system.thundercloud.service.config.process;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import ru.system.thundercloud.engine.service.delegate.ThunderCloudEndDelegate;
 import ru.system.thundercloud.engine.service.delegate.ThunderCloudStartDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
@@ -13,33 +15,36 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
  * @author DRakovskiy
  */
 
+@Configuration
 public class ConfigThunderCloudProcess {
 
-    private ThunderCloudTask tasks = ThunderCloudTask
-            .creator()
-            .name("task-1")
-            .delegates(ThunderCloudDelegate.creator()
-                    .add(new ThunderCloudStartDelegate())
-                    .add(new ThunderCloudEndDelegate())
-                    .create())
-            .create();
+ @Bean
+    public ThunderCloudProcess getThunderCloudProcess() {
 
-    private ThunderCloudGetaway getaway = ThunderCloudGetaway
-            .creator()
-            .name("getaway-1")
-            .task(tasks)
-            .create();
+        ThunderCloudTask tasks = ThunderCloudTask
+                .creator()
+                .name("task-1")
+                .delegates(ThunderCloudDelegate.creator()
+                        .add(new ThunderCloudStartDelegate())
+                        .add(new ThunderCloudEndDelegate())
+                        .create())
+                .create();
 
-    private ThunderCloudExecution execution = ThunderCloudExecution
-            .creator()
-            .name("execution-1")
-            .getaway(getaway)
-            .create();
+        ThunderCloudGetaway getaway = ThunderCloudGetaway
+                .creator()
+                .name("getaway-1")
+                .task(tasks)
+                .create();
 
-    private ThunderCloudProcess process = new ThunderCloudProcess("process", execution);
+        ThunderCloudExecution execution = ThunderCloudExecution
+                .creator()
+                .name("execution-1")
+                .getaway(getaway)
+                .create();
 
+        return new ThunderCloudProcess("process", execution);
 
-
+    }
 
 
 }

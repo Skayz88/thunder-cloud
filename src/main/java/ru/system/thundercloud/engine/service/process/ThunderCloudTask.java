@@ -25,6 +25,10 @@ public class ThunderCloudTask {
         return name;
     }
 
+    public List<ThunderCloudDelegate> getDelegates() {
+        return delegates;
+    }
+
     public static ThunderCloudTaskCreator creator() {
         return new ThunderCloudTaskCreator();
     }

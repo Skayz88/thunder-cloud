@@ -18,6 +18,14 @@ public class ThunderCloudProcess {
         this.execution = execution;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public ThunderCloudExecution getExecution() {
+        return execution;
+    }
+
     public ThunderCloudProcess(String name, ThunderCloudExecution execution) {
         this.id = UUID.randomUUID().toString();
         this.name = name;

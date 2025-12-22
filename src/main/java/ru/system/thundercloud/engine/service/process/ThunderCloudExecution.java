@@ -47,4 +47,8 @@ public class ThunderCloudExecution {
             return new ThunderCloudExecution(name, getaways);
         }
     }
+
+    public List<ThunderCloudGetaway> getGetaways() {
+        return getaways;
+    }
 }

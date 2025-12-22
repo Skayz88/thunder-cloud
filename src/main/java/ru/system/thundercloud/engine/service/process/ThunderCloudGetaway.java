@@ -28,6 +28,14 @@ public class ThunderCloudGetaway {
         return new ThunderCloudGetawayCreator();
     }
 
+    public List<String> getTaskListName() {
+        return taskListName;
+    }
+
+    public Map<String, ThunderCloudTask> getTasks() {
+        return tasks;
+    }
+
     public static class ThunderCloudGetawayCreator {
         private String name;
         private List<String> taskListName;
