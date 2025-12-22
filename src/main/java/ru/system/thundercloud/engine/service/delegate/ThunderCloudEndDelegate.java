@@ -1,6 +1,6 @@
 package ru.system.thundercloud.engine.service.delegate;
 
-import ru.t1.learning.data_jdbc.jdbc_project.engine.service.process.ThunderCloudDelegate;
+import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 
 /**
  *
