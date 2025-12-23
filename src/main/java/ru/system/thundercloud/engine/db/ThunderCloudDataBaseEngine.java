@@ -17,6 +17,7 @@ import ru.system.thundercloud.engine.exceptions.ExecutionNotFoundById;
 import ru.system.thundercloud.engine.service.ThunderCloudEngine;
 import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
+import ru.system.thundercloud.engine.service.process.ThunderCloudVariableMap;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -117,17 +118,12 @@ public class ThunderCloudDataBaseEngine {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveTCLVariableForThisProcessInNewTransaction(List<TCLVariable> variables) throws IOException {
+    public void saveTCLVariableForThisProcessInNewTransaction(ThunderCloudVariableMap tclVariablesMap) throws IOException {
         tclVariableService.saveVariables(variables);
     }
 
-    public Map<String, Object> getTCLVariablesForThisExecution(String executionId) {
-        List<TCLVariable> variables = tclVariableService.getTCLVariablesForThisExecution(executionId);
-        Map<String, Object> tclVariableMap = HashMap.newHashMap(variables.size());
-        for (TCLVariable variable : variables) {
-            tclVariableMap.put(variable.getKey(), variable.getDeserializedValue());
-        }
-        return tclVariableMap;
+    public ThunderCloudVariableMap getTCLVariablesForThisExecution(String executionId) {
+        return new ThunderCloudVariableMap(tclVariableService.getTCLVariablesForThisExecution(executionId));
     }
 
 }

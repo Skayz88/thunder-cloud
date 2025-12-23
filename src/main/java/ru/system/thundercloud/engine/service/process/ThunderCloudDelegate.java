@@ -12,7 +12,7 @@ public abstract class ThunderCloudDelegate {
 
     public final String name;
 
-    public abstract void execute(Map<String, Object> tclVariableMap);
+    public abstract void execute(ThunderCloudVariableMap tclVariableMap);
 
     public String getName() {
         return name;

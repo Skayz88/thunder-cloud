@@ -14,6 +14,7 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
+import ru.system.thundercloud.engine.service.process.ThunderCloudVariableMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,17 +96,10 @@ public class ThunderCloudEngine {
 
         List<ThunderCloudDelegate> delegates = task.getDelegates();
 
-        Map<String, Object> tclVariablesMap;
-
         if (Objects.nonNull(delegates) && !delegates.isEmpty()) {
-            tclVariablesMap = thunderCloudDataBaseEngine.getTCLVariablesForThisExecution(executionId);
-        } else {
-            tclVariablesMap = new HashMap<>();
+            ThunderCloudVariableMap tclVariablesMap = thunderCloudDataBaseEngine.getTCLVariablesForThisExecution(executionId);
+            delegates.forEach(delegate -> delegate.execute(tclVariablesMap));
         }
-
-        delegates.forEach(delegate -> {
-            delegate.execute(tclVariablesMap);
-        });
 
         thunderCloudDataBaseEngine.setNewGetawayForTask(executionId, task.getNextGetaway(), isEndGetawayOnNext(task.getNextGetaway()));
 
