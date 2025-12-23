@@ -99,25 +99,16 @@ public class ThunderCloudEngine {
         if (Objects.nonNull(delegates) && !delegates.isEmpty()) {
             ThunderCloudVariableMap tclVariablesMap = thunderCloudDataBaseEngine.getTCLVariablesForThisExecution(executionId);
             delegates.forEach(delegate -> delegate.execute(tclVariablesMap));
-        }
-
-        thunderCloudDataBaseEngine.setNewGetawayForTask(executionId, task.getNextGetaway(), isEndGetawayOnNext(task.getNextGetaway()));
-
-        List<TCLVariable> tclVariables = new ArrayList<>(tclVariablesMap.size());
-
-        tclVariablesMap.forEach((k, v) -> {
-            TCLVariable tclVariable = new TCLVariable();
-            tclVariable.setId(executionId + "_" + k);
-            tclVariable.setKey(k);
-            tclVariable.setDeserializedValue(v);
-            tclVariable.setExecutionId(tclExecution.id());
-            tclVariables.add(tclVariable);
-        });
-
-        try {
-            thunderCloudDataBaseEngine.saveTCLVariableForThisProcessInNewTransaction(tclVariables);
-        } catch (Exception e) {
-            throw new TCLVariablesErrorException(e.getMessage());
+            try {
+                thunderCloudDataBaseEngine.saveNewGetawayForTaskAndVariables(executionId,
+                        task.getNextGetaway(),
+                        isEndGetawayOnNext(task.getNextGetaway()),
+                        tclVariablesMap);
+            } catch (Exception e) {
+                throw new TCLVariablesErrorException(e.getMessage());
+            }
+        } else {
+            thunderCloudDataBaseEngine.setNewGetawayForTaskInNewTransactional(executionId, task.getNextGetaway(), isEndGetawayOnNext(task.getNextGetaway()));
         }
 
         return executionId;
@@ -131,19 +122,10 @@ public class ThunderCloudEngine {
 
         TCLExecution tclExecution = thunderCloudDataBaseEngine.createExecution(process);
 
-        List<TCLVariable> tclVariables = new ArrayList<>(variables.size());
-
-        variables.forEach((k, v) -> {
-            TCLVariable tclVariable = new TCLVariable();
-            tclVariable.setId(tclExecution.id() + "_" + k);
-            tclVariable.setKey(k);
-            tclVariable.setDeserializedValue(v);
-            tclVariable.setExecutionId(tclExecution.id());
-            tclVariables.add(tclVariable);
-        });
+        ThunderCloudVariableMap variableMap = new ThunderCloudVariableMap(variables, tclExecution.id());
 
         try {
-            thunderCloudDataBaseEngine.saveTCLVariableForThisProcess(tclVariables);
+            thunderCloudDataBaseEngine.saveTCLVariableForThisProcess(variableMap);
         } catch (Exception e) {
             throw new TCLVariablesErrorException(e.getMessage());
         }

@@ -74,8 +74,20 @@ public class ThunderCloudDataBaseEngine {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void setNewGetawayForTaskInNewTransactional(String executionId, String getaway, Boolean completed) {
+        tclTaskService.updateTaskOnNewGetaway(getaway, completed,  executionId);
+
+    }
+
+    @Transactional
     public void setNewGetawayForTask(String executionId, String getaway, Boolean completed) {
         tclTaskService.updateTaskOnNewGetaway(getaway, completed,  executionId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveNewGetawayForTaskAndVariables(String executionId, String getaway, Boolean completed, ThunderCloudVariableMap tclVariablesMap) throws IOException {
+        setNewGetawayForTask(executionId,  getaway, completed);
+        saveTCLVariableForThisProcess(tclVariablesMap);
     }
 
     public TCLExecution executionById(String executionId) {
@@ -113,17 +125,18 @@ public class ThunderCloudDataBaseEngine {
         return tclExecutionEntity;
     }
 
-    public void saveTCLVariableForThisProcess(List<TCLVariable> variables) throws IOException {
-        tclVariableService.saveVariables(variables);
+    @Transactional
+    public void saveTCLVariableForThisProcess(ThunderCloudVariableMap tclVariablesMap) throws IOException {
+        tclVariableService.saveVariables(tclVariablesMap.getTCLVariables());
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveTCLVariableForThisProcessInNewTransaction(ThunderCloudVariableMap tclVariablesMap) throws IOException {
-        tclVariableService.saveVariables(variables);
+    public void saveTCLVariableForThisProcessInNewTransactional(ThunderCloudVariableMap tclVariablesMap) throws IOException {
+        tclVariableService.saveVariables(tclVariablesMap.getTCLVariables());
     }
 
     public ThunderCloudVariableMap getTCLVariablesForThisExecution(String executionId) {
-        return new ThunderCloudVariableMap(tclVariableService.getTCLVariablesForThisExecution(executionId));
+        return new ThunderCloudVariableMap(tclVariableService.getTCLVariablesForThisExecution(executionId), executionId);
     }
 
 }
