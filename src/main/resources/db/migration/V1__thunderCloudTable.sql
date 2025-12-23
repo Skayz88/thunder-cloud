@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS tcl_task
 
 CREATE TABLE IF NOT EXISTS tcl_variable
 (
-    id           VARCHAR(64) PRIMARY KEY,
+    id           VARCHAR(84) PRIMARY KEY,
     key          VARCHAR(255) NOT NULL,
     value        TEXT         NOT NULL,
     execution_id VARCHAR(64),

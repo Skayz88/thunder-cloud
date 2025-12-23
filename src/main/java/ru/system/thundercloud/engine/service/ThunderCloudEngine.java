@@ -113,7 +113,7 @@ public class ThunderCloudEngine {
 
         tclVariablesMap.forEach((k, v) -> {
             TCLVariable tclVariable = new TCLVariable();
-            tclVariable.setId(UUID.randomUUID().toString());
+            tclVariable.setId(executionId + "_" + k);
             tclVariable.setKey(k);
             tclVariable.setDeserializedValue(v);
             tclVariable.setExecutionId(tclExecution.id());
@@ -141,7 +141,7 @@ public class ThunderCloudEngine {
 
         variables.forEach((k, v) -> {
             TCLVariable tclVariable = new TCLVariable();
-            tclVariable.setId(UUID.randomUUID().toString());
+            tclVariable.setId(tclExecution.id() + "_" + k);
             tclVariable.setKey(k);
             tclVariable.setDeserializedValue(v);
             tclVariable.setExecutionId(tclExecution.id());

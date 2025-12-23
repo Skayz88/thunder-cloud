@@ -31,7 +31,7 @@ public class RunnerService implements CommandLineRunner {
 
         //String executionId = engine.startNewExecutionForProcess(process.getName(), tclVariableMap);
 
-        String executionId = engine.executionTask("9844555e-359a-4eea-bd0f-5c6527f6d114", "task-1");
+        String executionId = engine.executionTask("37b5b909-4341-44eb-9de0-b9ed6d5367d2", "task-1");
 
         System.out.println("Приложение запущено успешно! " + executionId);
     }

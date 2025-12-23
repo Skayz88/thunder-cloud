@@ -67,7 +67,9 @@ public class ThunderCloudDataBaseEngine {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deleteCompletedTasksAndExecutions() {
         tclTaskService.deleteCompletedTasks();
+        tclVariableService.deleteVariableNotActualExecutions();
         tclExecutionService.deleteNotActualExecutions();
+
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -121,7 +123,7 @@ public class ThunderCloudDataBaseEngine {
 
     public Map<String, Object> getTCLVariablesForThisExecution(String executionId) {
         List<TCLVariable> variables = tclVariableService.getTCLVariablesForThisExecution(executionId);
-        Map<String, Object> tclVariableMap = new HashMap<>(variables.size());
+        Map<String, Object> tclVariableMap = HashMap.newHashMap(variables.size());
         for (TCLVariable variable : variables) {
             tclVariableMap.put(variable.getKey(), variable.getDeserializedValue());
         }

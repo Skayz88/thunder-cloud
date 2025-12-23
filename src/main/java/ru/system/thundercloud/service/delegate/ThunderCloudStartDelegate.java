@@ -28,6 +28,10 @@ public class ThunderCloudStartDelegate extends ThunderCloudDelegate {
         System.out.println("tclVariableMap.old="+tclVariableMap);
         tclVariableMap.put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         System.out.println("tclVariableMap.new="+tclVariableMap);
+        String s = tclVariableMap.get("Var1").toString();
+        Integer integer = Integer.valueOf(s);
+        integer = integer.intValue() + 1;
+        tclVariableMap.put("Var1", String.valueOf(integer));
         System.out.println("ThunderCloudStartDelegate.execute().end()");
     }
 }
