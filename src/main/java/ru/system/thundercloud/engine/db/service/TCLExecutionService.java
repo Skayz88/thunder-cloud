@@ -1,6 +1,7 @@
 package ru.system.thundercloud.engine.db.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.system.thundercloud.engine.db.repository.TCLExecutionRepository;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
 
@@ -25,5 +26,9 @@ public class TCLExecutionService {
 
     public Optional<TCLExecution> findExecutionById(String executionId) {
         return tclExecutionRepository.findById(executionId);
+    }
+
+    public void deleteNotActualExecutions() {
+        tclExecutionRepository.deleteNotActualExecutions();
     }
 }

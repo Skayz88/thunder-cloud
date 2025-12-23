@@ -17,4 +17,10 @@ public interface TCLExecutionRepository extends ListCrudRepository<TCLExecution,
     @Transactional
     @Query(value = "INSERT INTO tcl_execution(id, name, process_id) VALUES(:id, :name, :process_id)")
     void insert(@Param("id") String id, @Param("name") String name, @Param("process_id") String process_id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM tcl_execution WHERE id NOT IN "
+           + " (SELECT DISTINCT execution_id FROM tcl_task) ")
+    void deleteNotActualExecutions();
 }

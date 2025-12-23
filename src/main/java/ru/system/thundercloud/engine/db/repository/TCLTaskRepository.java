@@ -29,4 +29,10 @@ public interface TCLTaskRepository extends ListCrudRepository<TCLTask, String> {
                                 @Param("completed") Boolean completed,
                                 @Param("execution_id") String execution_id);
 
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM tcl_task WHERE completed = TRUE")
+    void deleteCompletedTasks();
+
 }

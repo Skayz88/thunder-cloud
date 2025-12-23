@@ -54,6 +54,12 @@ public class ThunderCloudDataBaseEngine {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deleteCompletedTasksAndExecutions() {
+        tclTaskService.deleteCompletedTasks();
+        tclExecutionService.deleteNotActualExecutions();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setNewGetawayForTask(String executionId, String getaway, Boolean completed) {
         tclTaskService.updateTaskOnNewGetaway(getaway, completed,  executionId);
     }
@@ -61,7 +67,7 @@ public class ThunderCloudDataBaseEngine {
     public TCLExecution executionById(String executionId) {
         return tclExecutionService
                 .findExecutionById(executionId)
-                .orElseThrow(() -> new ExecutionNotFoundById("По данноу id=" + executionId + "не найдено активных исполнителей"));
+                .orElseThrow(() -> new ExecutionNotFoundById("По данноу id=" + executionId + " не найдено активных исполнителей"));
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

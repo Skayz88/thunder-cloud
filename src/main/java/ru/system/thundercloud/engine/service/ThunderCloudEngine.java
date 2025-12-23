@@ -48,11 +48,16 @@ public class ThunderCloudEngine {
         log.info("init...");
         log.info("version: {}", VERSION);
         onMigrationComplete();
+        dropEndedProcess();
     }
 
     public void onMigrationComplete() {
         log.debug("Проверка заполнения таблицы процессов");
         thunderCloudDataBaseEngine.checkProcessesInDatabase(processMap);
+    }
+
+    public void dropEndedProcess() {
+        thunderCloudDataBaseEngine.deleteCompletedTasksAndExecutions();
     }
 
     private ThunderCloudProcess getProcessIfIsPresentOrError(String processName) {
