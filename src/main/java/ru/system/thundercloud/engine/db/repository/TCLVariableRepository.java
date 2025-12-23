@@ -29,4 +29,6 @@ public interface TCLVariableRepository extends ListCrudRepository<TCLVariable, S
                 @Param("key") String key,
                 @Param("value") String value,
                 @Param("execution_id") String execution_id);
+
+    List<TCLVariable> findTCLVariableByExecutionId(String executionId);
 }

@@ -9,6 +9,9 @@ package ru.system.thundercloud.service.delegate;
 
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 
+import java.util.Map;
+import java.util.UUID;
+
 /**
  *
  * @author DRakovskiy
@@ -20,7 +23,11 @@ public class ThunderCloudStartDelegate extends ThunderCloudDelegate {
     }
 
     @Override
-    public void execute() {
-        System.out.println("ThunderCloudStartDelegate.execute()");
+    public void execute(Map<String, Object> tclVariableMap) {
+        System.out.println("ThunderCloudStartDelegate.execute().start()");
+        System.out.println("tclVariableMap.old="+tclVariableMap);
+        tclVariableMap.put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        System.out.println("tclVariableMap.new="+tclVariableMap);
+        System.out.println("ThunderCloudStartDelegate.execute().end()");
     }
 }

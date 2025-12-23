@@ -8,13 +8,19 @@ import ru.system.thundercloud.engine.db.repository.ProcessExecutionTaskRepositor
 import ru.system.thundercloud.engine.db.service.TCLExecutionService;
 import ru.system.thundercloud.engine.db.service.TCLProcessService;
 import ru.system.thundercloud.engine.db.service.TCLTaskService;
+import ru.system.thundercloud.engine.db.service.TCLVariableService;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
 import ru.system.thundercloud.engine.db.tables.TCLProcess;
 import ru.system.thundercloud.engine.db.tables.TCLTask;
+import ru.system.thundercloud.engine.db.tables.TCLVariable;
 import ru.system.thundercloud.engine.exceptions.ExecutionNotFoundById;
+import ru.system.thundercloud.engine.service.ThunderCloudEngine;
 import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,19 +32,24 @@ import java.util.UUID;
 @Service
 public class ThunderCloudDataBaseEngine {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ThunderCloudDataBaseEngine.class);
+
     private final TCLExecutionService tclExecutionService;
     private final TCLProcessService tclProcessService;
     private final TCLTaskService tclTaskService;
+    private final TCLVariableService tclVariableService;
     private final ProcessExecutionTaskRepository processExecutionTaskRepository;
 
     public ThunderCloudDataBaseEngine(TCLExecutionService tclExecutionService,
                                       TCLProcessService tclProcessService,
                                       TCLTaskService tclTaskService,
-                                      ProcessExecutionTaskRepository processExecutionTaskRepository) {
+                                      ProcessExecutionTaskRepository processExecutionTaskRepository,
+                                      TCLVariableService tclVariableService) {
         this.tclTaskService = tclTaskService;
         this.tclExecutionService = tclExecutionService;
         this.tclProcessService = tclProcessService;
         this.processExecutionTaskRepository = processExecutionTaskRepository;
+        this.tclVariableService = tclVariableService;
     }
 
     public void checkProcessesInDatabase(Map<String, ThunderCloudProcess> processMap) {
@@ -70,7 +81,7 @@ public class ThunderCloudDataBaseEngine {
                 .orElseThrow(() -> new ExecutionNotFoundById("По данноу id=" + executionId + " не найдено активных исполнителей"));
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public TCLExecution createExecution(ThunderCloudProcess process) {
 
         TCLProcess tclProcessEntity = getProcessByName(process.getName());
@@ -98,4 +109,23 @@ public class ThunderCloudDataBaseEngine {
 
         return tclExecutionEntity;
     }
+
+    public void saveTCLVariableForThisProcess(List<TCLVariable> variables) throws IOException {
+        tclVariableService.saveVariables(variables);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveTCLVariableForThisProcessInNewTransaction(List<TCLVariable> variables) throws IOException {
+        tclVariableService.saveVariables(variables);
+    }
+
+    public Map<String, Object> getTCLVariablesForThisExecution(String executionId) {
+        List<TCLVariable> variables = tclVariableService.getTCLVariablesForThisExecution(executionId);
+        Map<String, Object> tclVariableMap = new HashMap<>(variables.size());
+        for (TCLVariable variable : variables) {
+            tclVariableMap.put(variable.getKey(), variable.getDeserializedValue());
+        }
+        return tclVariableMap;
+    }
+
 }

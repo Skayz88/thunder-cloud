@@ -2,20 +2,25 @@ package ru.system.thundercloud.engine.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.system.thundercloud.engine.db.ThunderCloudDataBaseEngine;
 import ru.system.thundercloud.engine.db.dto.ProcessExecutionTask;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
+import ru.system.thundercloud.engine.db.tables.TCLVariable;
 import ru.system.thundercloud.engine.exceptions.ProcessNotFoundException;
+import ru.system.thundercloud.engine.exceptions.TCLVariablesErrorException;
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static ru.system.thundercloud.engine.util.Constants.THUNDER_CLOUD_END_GETAWAY;
 
@@ -60,19 +65,6 @@ public class ThunderCloudEngine {
         thunderCloudDataBaseEngine.deleteCompletedTasksAndExecutions();
     }
 
-    private ThunderCloudProcess getProcessIfIsPresentOrError(String processName) {
-
-        ThunderCloudProcess process = processMap.get(processName);
-
-        if (Objects.isNull(process)) {
-            String errorMessage = "Процесс с таким названием не найден: " + processName;
-            log.error(errorMessage);
-            throw new ProcessNotFoundException(errorMessage);
-        }
-
-        return process;
-    }
-
     @Transactional(readOnly = true)
     public String executionTask(String executionId, String taskName) {
 
@@ -103,25 +95,84 @@ public class ThunderCloudEngine {
 
         List<ThunderCloudDelegate> delegates = task.getDelegates();
 
-        delegates.forEach(ThunderCloudDelegate::execute);
+        Map<String, Object> tclVariablesMap;
+
+        if (Objects.nonNull(delegates) && !delegates.isEmpty()) {
+            tclVariablesMap = thunderCloudDataBaseEngine.getTCLVariablesForThisExecution(executionId);
+        } else {
+            tclVariablesMap = new HashMap<>();
+        }
+
+        delegates.forEach(delegate -> {
+            delegate.execute(tclVariablesMap);
+        });
 
         thunderCloudDataBaseEngine.setNewGetawayForTask(executionId, task.getNextGetaway(), isEndGetawayOnNext(task.getNextGetaway()));
 
+        List<TCLVariable> tclVariables = new ArrayList<>(tclVariablesMap.size());
+
+        tclVariablesMap.forEach((k, v) -> {
+            TCLVariable tclVariable = new TCLVariable();
+            tclVariable.setId(UUID.randomUUID().toString());
+            tclVariable.setKey(k);
+            tclVariable.setDeserializedValue(v);
+            tclVariable.setExecutionId(tclExecution.id());
+            tclVariables.add(tclVariable);
+        });
+
+        try {
+            thunderCloudDataBaseEngine.saveTCLVariableForThisProcessInNewTransaction(tclVariables);
+        } catch (Exception e) {
+            throw new TCLVariablesErrorException(e.getMessage());
+        }
+
         return executionId;
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public String startNewExecutionForProcess(String processName, Map<String, Object> variables) {
+
+        ThunderCloudProcess process = getProcessIfIsPresentOrError(processName);
+
+        TCLExecution tclExecution = thunderCloudDataBaseEngine.createExecution(process);
+
+        List<TCLVariable> tclVariables = new ArrayList<>(variables.size());
+
+        variables.forEach((k, v) -> {
+            TCLVariable tclVariable = new TCLVariable();
+            tclVariable.setId(UUID.randomUUID().toString());
+            tclVariable.setKey(k);
+            tclVariable.setDeserializedValue(v);
+            tclVariable.setExecutionId(tclExecution.id());
+            tclVariables.add(tclVariable);
+        });
+
+        try {
+            thunderCloudDataBaseEngine.saveTCLVariableForThisProcess(tclVariables);
+        } catch (Exception e) {
+            throw new TCLVariablesErrorException(e.getMessage());
+        }
+
+        return tclExecution.id();
+
     }
 
     private Boolean isEndGetawayOnNext(String getaway) {
         return THUNDER_CLOUD_END_GETAWAY.equalsIgnoreCase(getaway);
     }
 
-    public String startNewExecutionForProcess(String processName) {
+    private ThunderCloudProcess getProcessIfIsPresentOrError(String processName) {
 
-        ThunderCloudProcess process = getProcessIfIsPresentOrError(processName);
+        ThunderCloudProcess process = processMap.get(processName);
 
-        TCLExecution tclExecution = thunderCloudDataBaseEngine.createExecution(process);
+        if (Objects.isNull(process)) {
+            String errorMessage = "Процесс с таким названием не найден: " + processName;
+            log.error(errorMessage);
+            throw new ProcessNotFoundException(errorMessage);
+        }
 
-        return tclExecution.id();
-
+        return process;
     }
 
 

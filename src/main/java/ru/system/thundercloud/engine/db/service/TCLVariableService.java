@@ -3,10 +3,12 @@ package ru.system.thundercloud.engine.db.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.system.thundercloud.engine.db.ThunderCloudDataBaseEngine;
 import ru.system.thundercloud.engine.db.repository.TCLVariableRepository;
 import ru.system.thundercloud.engine.db.tables.TCLVariable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,8 @@ import java.util.Optional;
  */
 @Service
 public class TCLVariableService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TCLVariableService.class);
 
     private final TCLVariableRepository tclVariableRepository;
 
@@ -38,9 +42,24 @@ public class TCLVariableService {
         return Optional.empty();
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<TCLVariable> getTCLVariablesForThisExecution(String executionId) {
+        List<TCLVariable>  tclVariables = tclVariableRepository.findByExecutionId(executionId);
+        List<TCLVariable>  tclVariableList = new ArrayList<>(tclVariables.size());
+        tclVariables.forEach(tclVariable -> {
+            try {
+                tclVariable.decodeValue();
+                tclVariableList.add(tclVariable);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        });
+        return tclVariableList;
+    }
+
+    @Transactional
     public void saveVariables(List<TCLVariable> variables) throws IOException {
         for (TCLVariable variable : variables) {
+            variable.encodeValue(variable.getDeserializedValue());
             tclVariableRepository.insert(
                     variable.getId(),
                     variable.getKey(),

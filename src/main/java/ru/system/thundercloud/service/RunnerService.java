@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.system.thundercloud.engine.service.ThunderCloudEngine;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author DRakovskiy
@@ -23,9 +26,12 @@ public class RunnerService implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        //String executionId = engine.startNewExecutionForProcess(process.getName());
+        Map<String, Object> tclVariableMap = new HashMap<>();
+        tclVariableMap.put("Var1", "1");
 
-        String executionId = engine.executionTask("86e08b5f-7d29-4d4f-8053-a64207fdd828", "task-1");
+        //String executionId = engine.startNewExecutionForProcess(process.getName(), tclVariableMap);
+
+        String executionId = engine.executionTask("9844555e-359a-4eea-bd0f-5c6527f6d114", "task-1");
 
         System.out.println("Приложение запущено успешно! " + executionId);
     }

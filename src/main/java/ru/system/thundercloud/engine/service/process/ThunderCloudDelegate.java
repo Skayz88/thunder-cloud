@@ -1,6 +1,7 @@
 package ru.system.thundercloud.engine.service.process;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  *
@@ -11,8 +12,7 @@ public abstract class ThunderCloudDelegate {
 
     public final String name;
 
-    public abstract void execute();
-
+    public abstract void execute(Map<String, Object> tclVariableMap);
 
     public String getName() {
         return name;
