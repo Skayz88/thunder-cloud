@@ -1,8 +1,6 @@
 package ru.system.thundercloud.engine.service.process;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,7 +14,7 @@ public class ThunderCloudExecution {
     private String startGetaway;
     private Map<String, ThunderCloudGetaway> getaways;
 
-    public ThunderCloudExecution(String name,  Map<String, ThunderCloudGetaway> getaways, String startGetaway) {
+    public ThunderCloudExecution(String name, Map<String, ThunderCloudGetaway> getaways, String startGetaway) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.getaways = getaways;
@@ -34,7 +32,7 @@ public class ThunderCloudExecution {
     public static class ThunderCloudExecutionCreator {
         private String name;
         private String startGetaway;
-        private final  Map<String, ThunderCloudGetaway> getaways;
+        private final Map<String, ThunderCloudGetaway> getaways;
 
         private ThunderCloudExecutionCreator() {
             getaways = new HashMap<>();

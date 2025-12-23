@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static ru.system.thundercloud.util.Constants.THUNDER_CLOUD_END_GETAWAY;
+import static ru.system.thundercloud.engine.util.Constants.THUNDER_CLOUD_END_GETAWAY;
 
 /**
  *

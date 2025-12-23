@@ -10,7 +10,7 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
 
-import static ru.system.thundercloud.util.Constants.THUNDER_CLOUD_END_GETAWAY;
+import static ru.system.thundercloud.engine.util.Constants.THUNDER_CLOUD_END_GETAWAY;
 
 /**
  *
