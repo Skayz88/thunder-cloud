@@ -1,4 +1,10 @@
-package ru.system.thundercloud.engine.service.delegate;
+/*
+ * VTB Group. Do not reproduce without permission in writing.
+ *
+ * Copyright (c) 2025 VTB Group. All rights reserved.
+ */
+
+package ru.system.thundercloud.service.delegate;
 
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 

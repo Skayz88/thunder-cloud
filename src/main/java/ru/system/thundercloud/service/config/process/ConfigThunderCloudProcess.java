@@ -2,8 +2,8 @@ package ru.system.thundercloud.service.config.process;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.system.thundercloud.engine.service.delegate.ThunderCloudEndDelegate;
-import ru.system.thundercloud.engine.service.delegate.ThunderCloudStartDelegate;
+import ru.system.thundercloud.service.delegate.ThunderCloudEndDelegate;
+import ru.system.thundercloud.service.delegate.ThunderCloudStartDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
