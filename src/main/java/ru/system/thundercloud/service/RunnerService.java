@@ -22,8 +22,12 @@ public class RunnerService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Приложение запущено успешно!");
-        engine.startNewExecutionForProcess(process.getName());
+
+        //String executionId = engine.startNewExecutionForProcess(process.getName());
+
+        String executionId = engine.executionTask("8242dc11-c70a-4eed-bb1c-a761ad109695", "task-1");
+
+        System.out.println("Приложение запущено успешно! " + executionId);
     }
 
 

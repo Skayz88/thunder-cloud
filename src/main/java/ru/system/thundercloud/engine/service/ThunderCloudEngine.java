@@ -2,13 +2,12 @@ package ru.system.thundercloud.engine.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.system.thundercloud.engine.db.ThunderCloudDataBaseEngine;
-import ru.system.thundercloud.engine.db.service.TCLExecutionService;
-import ru.system.thundercloud.engine.db.service.TCLProcessService;
+import ru.system.thundercloud.engine.db.dto.ProcessExecutionTask;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
-import ru.system.thundercloud.engine.db.tables.TCLProcess;
 import ru.system.thundercloud.engine.exceptions.ProcessNotFoundException;
-import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
+import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
@@ -17,7 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
+
+import static ru.system.thundercloud.util.Constants.THUNDER_CLOUD_END_GETAWAY;
 
 /**
  *
@@ -68,6 +68,47 @@ public class ThunderCloudEngine {
         return process;
     }
 
+    @Transactional(readOnly = true)
+    public String executionTask(String executionId, String taskName) {
+
+        TCLExecution tclExecution = thunderCloudDataBaseEngine.executionById(executionId);
+
+        ProcessExecutionTask processExecutionTask = thunderCloudDataBaseEngine.getProcessExecutionTaskByExecutionId(executionId);
+
+        ThunderCloudProcess thunderCloudProcess = processMap.get(processExecutionTask.processName());
+
+        ThunderCloudGetaway getaway = thunderCloudProcess
+                .getExecution()
+                .getGetaways()
+                .get(processExecutionTask.taskName());
+
+        if (Objects.isNull(getaway)) throw new ProcessNotFoundException("Не найден процесс с id= "
+                + executionId
+                + " и точкой продолжения имеющей задание- " + taskName
+        );
+
+        ThunderCloudTask task = getaway
+                .getTasks()
+                .get(taskName);
+
+        if (Objects.isNull(task)) throw new ProcessNotFoundException("Не найден процесс с id= "
+                + executionId
+                + " и заданием- " + taskName
+        );
+
+        List<ThunderCloudDelegate> delegates = task.getDelegates();
+
+        delegates.forEach(ThunderCloudDelegate::execute);
+
+        thunderCloudDataBaseEngine.setNewGetawayForTask(executionId, task.getNextGetaway(), isEndGetawayOnNext(task.getNextGetaway()));
+
+        return executionId;
+    }
+
+    private Boolean isEndGetawayOnNext(String getaway) {
+        return THUNDER_CLOUD_END_GETAWAY.equalsIgnoreCase(getaway);
+    }
+
     public String startNewExecutionForProcess(String processName) {
 
         ThunderCloudProcess process = getProcessIfIsPresentOrError(processName);
@@ -75,21 +116,6 @@ public class ThunderCloudEngine {
         TCLExecution tclExecution = thunderCloudDataBaseEngine.createExecution(process);
 
         return tclExecution.id();
-
-//        List<ThunderCloudGetaway> getaways = process.getExecution().getGetaways();
-//
-//        for (ThunderCloudGetaway getaway : getaways) {
-//            System.out.println("ThunderCloudGetaway- " + getaway.getName());
-//            List<String> taskList = getaway.getTaskListName();
-//            Map<String, ThunderCloudTask> tasks = getaway.getTasks();
-//            for (String task : taskList) {
-//                System.out.println("ThunderCloudEngine task: " + task);
-//                ThunderCloudTask cloudTask = tasks.get(task);
-//                cloudTask.getDelegates().forEach(delegate -> {
-//                    delegate.execute();
-//                });
-//            }
-//        }
 
     }
 

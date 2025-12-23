@@ -1,10 +1,10 @@
 package ru.system.thundercloud.engine.db.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.system.thundercloud.engine.db.repository.TCLExecutionRepository;
-import ru.system.thundercloud.engine.db.repository.TCLProcessRepository;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
+
+import java.util.Optional;
 
 /**
  *
@@ -19,7 +19,11 @@ public class TCLExecutionService {
         this.tclExecutionRepository = tclExecutionRepository;
     }
 
-    public void insertNewExecution(TCLExecution  tclExecution) {
+    public void insertNewExecution(TCLExecution tclExecution) {
         tclExecutionRepository.insert(tclExecution.id(), tclExecution.name(), tclExecution.process_id());
+    }
+
+    public Optional<TCLExecution> findExecutionById(String executionId) {
+        return tclExecutionRepository.findById(executionId);
     }
 }

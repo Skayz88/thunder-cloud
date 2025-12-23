@@ -11,13 +11,11 @@ import java.util.UUID;
 public class ThunderCloudGetaway {
     private String id;
     private String name;
-    private String nextGetaway;
     private Map<String, ThunderCloudTask> tasks;
 
-    public ThunderCloudGetaway(String name, String nextGetaway, Map<String, ThunderCloudTask> tasks) {
+    public ThunderCloudGetaway(String name, Map<String, ThunderCloudTask> tasks) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
-        this.nextGetaway = nextGetaway;
         this.tasks = tasks;
     }
 
@@ -35,7 +33,6 @@ public class ThunderCloudGetaway {
 
     public static class ThunderCloudGetawayCreator {
         private String name;
-        private String nextGetaway;
         private Map<String, ThunderCloudTask> tasks;
 
         private ThunderCloudGetawayCreator() {
@@ -52,13 +49,8 @@ public class ThunderCloudGetaway {
             return this;
         }
 
-        public ThunderCloudGetawayCreator nextGetaway(String nextGetaway) {
-            this.nextGetaway = nextGetaway;
-            return this;
-        }
-
         public ThunderCloudGetaway create() {
-            return new ThunderCloudGetaway(name, nextGetaway, tasks);
+            return new ThunderCloudGetaway(name, tasks);
         }
     }
 }

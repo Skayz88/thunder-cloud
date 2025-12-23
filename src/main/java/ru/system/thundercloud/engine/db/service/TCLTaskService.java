@@ -21,4 +21,8 @@ public class TCLTaskService {
     public void insertNewTask(TCLTask tclTask) {
         tclTaskRepository.insert(tclTask.id(), tclTask.name(), tclTask.completed(), tclTask.execution_id());
     }
+
+    public void updateTaskOnNewGetaway(String name, Boolean completed, String execution_id) {
+        tclTaskRepository.updateTaskOnNewGetaway(name, completed, execution_id);
+    }
 }

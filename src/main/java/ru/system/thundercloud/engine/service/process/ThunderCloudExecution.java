@@ -14,12 +14,13 @@ public class ThunderCloudExecution {
     private String id;
     private String name;
     private String startGetaway;
-    private List<ThunderCloudGetaway> getaways;
+    private Map<String, ThunderCloudGetaway> getaways;
 
-    public ThunderCloudExecution(String name, List<ThunderCloudGetaway> getaways) {
+    public ThunderCloudExecution(String name,  Map<String, ThunderCloudGetaway> getaways, String startGetaway) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.getaways = getaways;
+        this.startGetaway = startGetaway;
     }
 
     public String getName() {
@@ -32,10 +33,11 @@ public class ThunderCloudExecution {
 
     public static class ThunderCloudExecutionCreator {
         private String name;
-        private final List<ThunderCloudGetaway> getaways;
+        private String startGetaway;
+        private final  Map<String, ThunderCloudGetaway> getaways;
 
         private ThunderCloudExecutionCreator() {
-            getaways = new ArrayList<>();
+            getaways = new HashMap<>();
         }
 
         public ThunderCloudExecutionCreator name(String name) {
@@ -44,16 +46,25 @@ public class ThunderCloudExecution {
         }
 
         public ThunderCloudExecutionCreator getaway(ThunderCloudGetaway getaway) {
-            getaways.add(getaway);
+            getaways.put(getaway.getName(), getaway);
+            return this;
+        }
+
+        public ThunderCloudExecutionCreator startGetaway(String startGetaway) {
+            this.startGetaway = startGetaway;
             return this;
         }
 
         public ThunderCloudExecution create() {
-            return new ThunderCloudExecution(name, getaways);
+            return new ThunderCloudExecution(name, getaways, startGetaway);
         }
     }
 
-    public List<ThunderCloudGetaway> getGetaways() {
+    public Map<String, ThunderCloudGetaway> getGetaways() {
         return getaways;
+    }
+
+    public String getStartGetaway() {
+        return startGetaway;
     }
 }

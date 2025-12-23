@@ -21,4 +21,12 @@ public interface TCLTaskRepository extends ListCrudRepository<TCLTask, String> {
                 @Param("completed") Boolean completed,
                 @Param("execution_id") String execution_id);
 
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE tcl_task set name = :name, completed = :completed WHERE execution_id = :execution_id")
+    void updateTaskOnNewGetaway(@Param("name") String name,
+                                @Param("completed") Boolean completed,
+                                @Param("execution_id") String execution_id);
+
 }
