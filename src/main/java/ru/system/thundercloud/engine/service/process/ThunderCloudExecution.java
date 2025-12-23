@@ -13,6 +13,7 @@ import java.util.UUID;
 public class ThunderCloudExecution {
     private String id;
     private String name;
+    private String startGetaway;
     private List<ThunderCloudGetaway> getaways;
 
     public ThunderCloudExecution(String name, List<ThunderCloudGetaway> getaways) {

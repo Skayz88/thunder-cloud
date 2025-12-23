@@ -1,8 +1,6 @@
 package ru.system.thundercloud.engine.service.process;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -13,13 +11,13 @@ import java.util.UUID;
 public class ThunderCloudGetaway {
     private String id;
     private String name;
-    private List<String> taskListName;
+    private String nextGetaway;
     private Map<String, ThunderCloudTask> tasks;
 
-    public ThunderCloudGetaway(String name, List<String> taskListName, Map<String, ThunderCloudTask> tasks) {
+    public ThunderCloudGetaway(String name, String nextGetaway, Map<String, ThunderCloudTask> tasks) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
-        this.taskListName = taskListName;
+        this.nextGetaway = nextGetaway;
         this.tasks = tasks;
     }
 
@@ -31,21 +29,16 @@ public class ThunderCloudGetaway {
         return new ThunderCloudGetawayCreator();
     }
 
-    public List<String> getTaskListName() {
-        return taskListName;
-    }
-
     public Map<String, ThunderCloudTask> getTasks() {
         return tasks;
     }
 
     public static class ThunderCloudGetawayCreator {
         private String name;
-        private List<String> taskListName;
+        private String nextGetaway;
         private Map<String, ThunderCloudTask> tasks;
 
         private ThunderCloudGetawayCreator() {
-            taskListName = new ArrayList<>();
             tasks = new HashMap<>();
         }
 
@@ -55,13 +48,17 @@ public class ThunderCloudGetaway {
         }
 
         public ThunderCloudGetawayCreator task(ThunderCloudTask task) {
-            taskListName.add(task.getName());
             tasks.put(task.getName(), task);
             return this;
         }
 
+        public ThunderCloudGetawayCreator nextGetaway(String nextGetaway) {
+            this.nextGetaway = nextGetaway;
+            return this;
+        }
+
         public ThunderCloudGetaway create() {
-            return new ThunderCloudGetaway(name, taskListName, tasks);
+            return new ThunderCloudGetaway(name, nextGetaway, tasks);
         }
     }
 }
