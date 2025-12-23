@@ -49,6 +49,9 @@ public class ThunderCloudVariableMap {
             thunderCloudVariable.setValue(value);
             thunderCloudVariable.setUpdated(true);
             tclVariableMap.put(key, thunderCloudVariable);
+        } else {
+            ThunderCloudVariable thunderCloudVariable = new ThunderCloudVariable(true, value);
+            tclVariableMap.put(key, thunderCloudVariable);
         }
     }
 
@@ -65,6 +68,19 @@ public class ThunderCloudVariableMap {
             }
         });
         return variables;
+    }
+
+    public Object get(String key) {
+        if (tclVariableMap.containsKey(key)) {
+            ThunderCloudVariable thunderCloudVariable = tclVariableMap.get(key);
+            return thunderCloudVariable.getValue();
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return tclVariableMap.toString();
     }
 
     private TCLVariable thunderCloudVariableToTCLVariable(String key, ThunderCloudVariable thunderCloudVariable, String executionId) {

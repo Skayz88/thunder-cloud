@@ -20,6 +20,8 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudVariableMap;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,11 @@ public class ThunderCloudDataBaseEngine {
 
     public ProcessExecutionTask getProcessExecutionTaskByExecutionId(String executionId) {
         return processExecutionTaskRepository.findProcessesExecutionsAndTasks(executionId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateTaskOnSetCompletedIfTimeOver() {
+        tclTaskService.updateTaskOnSetCompletedIfTimeOver();
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -117,6 +124,7 @@ public class ThunderCloudDataBaseEngine {
                 UUID.randomUUID().toString(),
                 execution.getStartGetaway(),
                 false,
+                Instant.now().plus(Duration.ofMinutes(2)),
                 tclExecutionId
         );
 

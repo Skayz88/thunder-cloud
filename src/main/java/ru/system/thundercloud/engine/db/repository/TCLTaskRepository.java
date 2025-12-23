@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.system.thundercloud.engine.db.tables.TCLTask;
 
+import java.time.Instant;
+
 /**
  *
  * @author DRakovskiy
@@ -24,10 +26,16 @@ public interface TCLTaskRepository extends ListCrudRepository<TCLTask, String> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE tcl_task set name = :name, completed = :completed WHERE execution_id = :execution_id")
+    @Query(value = "UPDATE tcl_task set name = :name, completed = :completed, expires_at= :expires_at WHERE execution_id = :execution_id")
     void updateTaskOnNewGetaway(@Param("name") String name,
                                 @Param("completed") Boolean completed,
+                                @Param("expires_at") Instant expires_at,
                                 @Param("execution_id") String execution_id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE tcl_task set completed = true WHERE expires_at < :expires_at")
+    void updateTaskOnSetCompletedIfTimeOver(@Param("expires_at") Instant expires_at);
 
 
     @Transactional

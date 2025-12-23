@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS tcl_task
     id           VARCHAR(64) PRIMARY KEY,
     name         VARCHAR(255) NOT NULL,
     completed    BOOLEAN DEFAULT FALSE,
+    expires_at TIMESTAMP WITH TIME ZONE,
     execution_id VARCHAR(64) REFERENCES tcl_execution (id)
 );
 

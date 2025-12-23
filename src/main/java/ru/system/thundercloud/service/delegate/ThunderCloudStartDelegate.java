@@ -8,6 +8,7 @@ package ru.system.thundercloud.service.delegate;
 
 
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
+import ru.system.thundercloud.engine.service.process.ThunderCloudVariableMap;
 
 import java.util.Map;
 import java.util.UUID;
@@ -23,11 +24,11 @@ public class ThunderCloudStartDelegate extends ThunderCloudDelegate {
     }
 
     @Override
-    public void execute(Map<String, Object> tclVariableMap) {
+    public void execute(ThunderCloudVariableMap tclVariableMap) {
         System.out.println("ThunderCloudStartDelegate.execute().start()");
         System.out.println("tclVariableMap.old="+tclVariableMap);
-        tclVariableMap.put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        System.out.println("tclVariableMap.new="+tclVariableMap);
+        //tclVariableMap.put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        System.out.println("tclVariableMap.new="+tclVariableMap.toString());
         String s = tclVariableMap.get("Var1").toString();
         Integer integer = Integer.valueOf(s);
         integer = integer.intValue() + 1;

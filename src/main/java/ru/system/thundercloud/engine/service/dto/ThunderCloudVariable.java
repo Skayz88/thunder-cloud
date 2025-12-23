@@ -40,4 +40,12 @@ public class ThunderCloudVariable {
     public void setValue(Object value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "ThunderCloudVariable{" +
+                "isUpdated=" + isUpdated +
+                ", value=" + value +
+                '}';
+    }
 }

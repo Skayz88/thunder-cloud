@@ -54,6 +54,7 @@ public class ThunderCloudEngine {
         log.info("init...");
         log.info("version: {}", VERSION);
         onMigrationComplete();
+        updateTaskOnSetCompletedIfTimeOver();
         dropEndedProcess();
     }
 
@@ -64,6 +65,10 @@ public class ThunderCloudEngine {
 
     public void dropEndedProcess() {
         thunderCloudDataBaseEngine.deleteCompletedTasksAndExecutions();
+    }
+
+    public void updateTaskOnSetCompletedIfTimeOver() {
+        thunderCloudDataBaseEngine.updateTaskOnSetCompletedIfTimeOver();
     }
 
     @Transactional(readOnly = true)
