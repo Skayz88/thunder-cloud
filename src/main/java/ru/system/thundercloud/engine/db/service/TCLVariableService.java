@@ -60,7 +60,7 @@ public class TCLVariableService {
         tclVariableRepository.deleteVariableNotActualExecutions();
     }
 
-    @Transactional
+
     public void saveVariables(List<TCLVariable> variables) throws IOException {
         for (TCLVariable variable : variables) {
             variable.encodeValue(variable.getDeserializedValue());

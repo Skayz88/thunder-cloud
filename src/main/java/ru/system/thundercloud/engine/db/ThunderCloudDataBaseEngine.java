@@ -12,9 +12,7 @@ import ru.system.thundercloud.engine.db.service.TCLVariableService;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
 import ru.system.thundercloud.engine.db.tables.TCLProcess;
 import ru.system.thundercloud.engine.db.tables.TCLTask;
-import ru.system.thundercloud.engine.db.tables.TCLVariable;
 import ru.system.thundercloud.engine.exceptions.ExecutionNotFoundById;
-import ru.system.thundercloud.engine.service.ThunderCloudEngine;
 import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudVariableMap;
@@ -22,8 +20,6 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudVariableMap;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -81,19 +77,18 @@ public class ThunderCloudDataBaseEngine {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void setNewGetawayForTaskInNewTransactional(String executionId, String getaway, Boolean completed) {
-        tclTaskService.updateTaskOnNewGetaway(getaway, completed,  executionId);
+    public void setNewGetawayForTaskInNewTransactional(String executionId, String getaway, Boolean completed, Long timeDuration) {
+        tclTaskService.updateTaskOnNewGetaway(getaway, completed, executionId, timeDuration);
 
     }
 
-    @Transactional
-    public void setNewGetawayForTask(String executionId, String getaway, Boolean completed) {
-        tclTaskService.updateTaskOnNewGetaway(getaway, completed,  executionId);
+    public void setNewGetawayForTask(String executionId, String getaway, Boolean completed, Long timeDuration) {
+        tclTaskService.updateTaskOnNewGetaway(getaway, completed, executionId, timeDuration);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveNewGetawayForTaskAndVariables(String executionId, String getaway, Boolean completed, ThunderCloudVariableMap tclVariablesMap) throws IOException {
-        setNewGetawayForTask(executionId,  getaway, completed);
+    public void saveNewGetawayForTaskAndVariables(String executionId, String getaway, Boolean completed, Long timeDuration, ThunderCloudVariableMap tclVariablesMap) throws IOException {
+        setNewGetawayForTask(executionId, getaway, completed, timeDuration);
         saveTCLVariableForThisProcess(tclVariablesMap);
     }
 
@@ -124,7 +119,7 @@ public class ThunderCloudDataBaseEngine {
                 UUID.randomUUID().toString(),
                 execution.getStartGetaway(),
                 false,
-                Instant.now().plus(Duration.ofMinutes(2)),
+                Instant.now().plus(Duration.ofMinutes(15)),
                 tclExecutionId
         );
 
@@ -133,7 +128,6 @@ public class ThunderCloudDataBaseEngine {
         return tclExecutionEntity;
     }
 
-    @Transactional
     public void saveTCLVariableForThisProcess(ThunderCloudVariableMap tclVariablesMap) throws IOException {
         tclVariableService.saveVariables(tclVariablesMap.getTCLVariables());
     }

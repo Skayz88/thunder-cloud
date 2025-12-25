@@ -17,10 +17,11 @@ public interface TCLTaskRepository extends ListCrudRepository<TCLTask, String> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO tcl_task(id, name, completed, execution_id) VALUES(:id, :name, :completed, :execution_id)")
+    @Query(value = "INSERT INTO tcl_task(id, name, completed, expires_at, execution_id) VALUES(:id, :name, :completed, :expires_at, :execution_id)")
     void insert(@Param("id") String id,
                 @Param("name") String name,
                 @Param("completed") Boolean completed,
+                @Param("expires_at") Instant expiresAt,
                 @Param("execution_id") String execution_id);
 
 

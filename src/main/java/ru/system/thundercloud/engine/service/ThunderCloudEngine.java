@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.system.thundercloud.engine.db.ThunderCloudDataBaseEngine;
 import ru.system.thundercloud.engine.db.dto.ProcessExecutionTask;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
-import ru.system.thundercloud.engine.db.tables.TCLVariable;
 import ru.system.thundercloud.engine.exceptions.ProcessNotFoundException;
 import ru.system.thundercloud.engine.exceptions.TCLVariablesErrorException;
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
@@ -16,12 +15,10 @@ import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
 import ru.system.thundercloud.engine.service.process.ThunderCloudVariableMap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import static ru.system.thundercloud.engine.util.Constants.THUNDER_CLOUD_END_GETAWAY;
 
@@ -33,7 +30,7 @@ import static ru.system.thundercloud.engine.util.Constants.THUNDER_CLOUD_END_GET
 public class ThunderCloudEngine {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ThunderCloudEngine.class);
-    private static final String VERSION = "0.0.1";
+    private static final String VERSION = "0.0.15";
 
     private final ThunderCloudDataBaseEngine thunderCloudDataBaseEngine;
 
@@ -108,12 +105,14 @@ public class ThunderCloudEngine {
                 thunderCloudDataBaseEngine.saveNewGetawayForTaskAndVariables(executionId,
                         task.getNextGetaway(),
                         isEndGetawayOnNext(task.getNextGetaway()),
+                        task.getTimerMinutes(),
                         tclVariablesMap);
             } catch (Exception e) {
                 throw new TCLVariablesErrorException(e.getMessage());
             }
         } else {
-            thunderCloudDataBaseEngine.setNewGetawayForTaskInNewTransactional(executionId, task.getNextGetaway(), isEndGetawayOnNext(task.getNextGetaway()));
+            thunderCloudDataBaseEngine.setNewGetawayForTaskInNewTransactional(executionId, task.getNextGetaway(),
+                    isEndGetawayOnNext(task.getNextGetaway()), task.getTimerMinutes());
         }
 
         return executionId;

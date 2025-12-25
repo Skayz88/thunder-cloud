@@ -2,15 +2,13 @@ package ru.system.thundercloud.service.config.process;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.system.thundercloud.service.delegate.ThunderCloudEndDelegate;
-import ru.system.thundercloud.service.delegate.ThunderCloudStartDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
-
-import static ru.system.thundercloud.engine.util.Constants.THUNDER_CLOUD_END_GETAWAY;
+import ru.system.thundercloud.service.delegate.ThunderCloudEndDelegate;
+import ru.system.thundercloud.service.delegate.ThunderCloudStartDelegate;
 
 /**
  *
@@ -21,35 +19,34 @@ import static ru.system.thundercloud.engine.util.Constants.THUNDER_CLOUD_END_GET
 public class ConfigThunderCloudProcess {
 
     @Bean
-    public ThunderCloudProcess getThunderCloudProcess() {
+    public ThunderCloudProcess getThunderCloudProcess(ThunderCloudStartDelegate startDelegate,  ThunderCloudEndDelegate endDelegate) {
 
         ThunderCloudTask tasks = ThunderCloudTask
                 .creator()
                 .name("task-1")
                 .nextGetaway("getaway-2")
                 .delegates(ThunderCloudDelegate.creator()
-                        .add(new ThunderCloudStartDelegate())
-                        .add(new ThunderCloudEndDelegate())
+                        .add(startDelegate)
+                        .add(endDelegate)
                         .create())
                 .create();
 
         ThunderCloudTask tasks_2 = ThunderCloudTask
                 .creator()
                 .name("task-1")
-                .nextGetaway("getaway-3")
+                .nextGetaway("getaway-3", 60L)
                 .delegates(ThunderCloudDelegate.creator()
-                        .add(new ThunderCloudStartDelegate())
-                        .add(new ThunderCloudEndDelegate())
+                        .add(startDelegate)
+                        .add(endDelegate)
                         .create())
                 .create();
 
         ThunderCloudTask tasks_3 = ThunderCloudTask
                 .creator()
                 .name("task-1")
-                .nextGetaway(THUNDER_CLOUD_END_GETAWAY)
                 .delegates(ThunderCloudDelegate.creator()
-                        .add(new ThunderCloudStartDelegate())
-                        .add(new ThunderCloudEndDelegate())
+                        .add(startDelegate)
+                        .add(endDelegate)
                         .create())
                 .create();
 

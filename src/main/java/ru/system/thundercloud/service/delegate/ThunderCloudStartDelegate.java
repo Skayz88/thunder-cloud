@@ -7,6 +7,7 @@
 package ru.system.thundercloud.service.delegate;
 
 
+import org.springframework.stereotype.Component;
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudVariableMap;
 
@@ -17,6 +18,8 @@ import java.util.UUID;
  *
  * @author DRakovskiy
  */
+
+@Component
 public class ThunderCloudStartDelegate extends ThunderCloudDelegate {
 
     public ThunderCloudStartDelegate() {
