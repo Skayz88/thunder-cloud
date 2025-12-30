@@ -2,7 +2,6 @@ package ru.system.thundercloud.service.config.process;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
 import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
@@ -19,7 +18,7 @@ import ru.system.thundercloud.service.delegate.ThunderCloudStartDelegate;
 public class ConfigThunderCloudProcess {
 
     @Bean
-    public ThunderCloudProcess getThunderCloudProcess(ThunderCloudStartDelegate startDelegate,  ThunderCloudEndDelegate endDelegate) {
+    public ThunderCloudProcess getThunderCloudProcess(ThunderCloudStartDelegate startDelegate, ThunderCloudEndDelegate endDelegate) {
 
         ThunderCloudTask tasks = ThunderCloudTask
                 .creator()

@@ -3,6 +3,7 @@ package ru.system.thundercloud.engine.service.process;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static ru.system.thundercloud.engine.util.Constants.THUNDER_CLOUD_END_GETAWAY;
 
@@ -16,9 +17,9 @@ public class ThunderCloudTask {
     private String name;
     private String nextGetaway;
     private Long timerMinutes;
-    private List<ThunderCloudDelegate> delegates;
+    private List<ThunderCloudDelegateWithSupplier> delegates;
 
-    public ThunderCloudTask(String name, List<ThunderCloudDelegate> delegates, String nextGetaway, Long timerMinutes) {
+    public ThunderCloudTask(String name, List<ThunderCloudDelegateWithSupplier> delegates, String nextGetaway, Long timerMinutes) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.delegates = delegates;
@@ -30,7 +31,7 @@ public class ThunderCloudTask {
         return name;
     }
 
-    public List<ThunderCloudDelegate> getDelegates() {
+    public List<ThunderCloudDelegateWithSupplier> getDelegates() {
         return delegates;
     }
 
@@ -50,7 +51,7 @@ public class ThunderCloudTask {
         private String name;
         private String nextGetaway = THUNDER_CLOUD_END_GETAWAY;
         private Long timerMinutes = 2L;
-        private List<ThunderCloudDelegate> delegates = new ArrayList<>();
+        private List<ThunderCloudDelegateWithSupplier> delegates = new ArrayList<>();
 
         public ThunderCloudTaskCreator() {
         }
@@ -60,17 +61,19 @@ public class ThunderCloudTask {
             return this;
         }
 
-        public ThunderCloudTaskCreator delegates(List<ThunderCloudDelegate> delegates) {
-            this.delegates = delegates;
+        public ThunderCloudTaskCreator delegate(ThunderCloudDelegate delegate, Function<ThunderCloudVariableMap, Boolean> function) {
+            this.delegates.add(
+                    new ThunderCloudDelegateWithSupplier(delegate, function)
+            );
             return this;
         }
 
         public ThunderCloudTaskCreator delegate(ThunderCloudDelegate delegate) {
-            this.delegates.add(delegate);
+            this.delegates.add(
+                    new ThunderCloudDelegateWithSupplier(delegate, tcvm -> true)
+            );
             return this;
         }
-
-
 
         public ThunderCloudTaskCreator nextGetaway(String nextGetaway) {
             this.nextGetaway = nextGetaway;
