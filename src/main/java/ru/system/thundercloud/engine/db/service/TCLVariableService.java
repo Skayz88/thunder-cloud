@@ -1,9 +1,7 @@
 package ru.system.thundercloud.engine.db.service;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import ru.system.thundercloud.engine.db.ThunderCloudDataBaseEngine;
 import ru.system.thundercloud.engine.db.repository.TCLVariableRepository;
 import ru.system.thundercloud.engine.db.tables.TCLVariable;
 
@@ -19,12 +17,20 @@ import java.util.Optional;
 @Service
 public class TCLVariableService {
 
+    private static final String SQL_INSERT_MERGE = "INSERT INTO tcl_variable (id, key, value, execution_id) "
+            + "VALUES %s "
+            + "ON CONFLICT (id) DO UPDATE "
+            + "SET value = EXCLUDED.value";
+    private static final String FORMAT_FOR_INSERT_VARIABLES = "( '%s', '%s', '%s', '%s' )";
+
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TCLVariableService.class);
 
     private final TCLVariableRepository tclVariableRepository;
+    private final JdbcTemplate jdbcTemplate;
 
-    public TCLVariableService(TCLVariableRepository tclVariableRepository) {
+    public TCLVariableService(TCLVariableRepository tclVariableRepository, JdbcTemplate jdbcTemplate) {
         this.tclVariableRepository = tclVariableRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void saveVariable(TCLVariable variable) throws IOException {
@@ -43,8 +49,8 @@ public class TCLVariableService {
     }
 
     public List<TCLVariable> getTCLVariablesForThisExecution(String executionId) {
-        List<TCLVariable>  tclVariables = tclVariableRepository.findByExecutionId(executionId);
-        List<TCLVariable>  tclVariableList = new ArrayList<>(tclVariables.size());
+        List<TCLVariable> tclVariables = tclVariableRepository.findByExecutionId(executionId);
+        List<TCLVariable> tclVariableList = new ArrayList<>(tclVariables.size());
         tclVariables.forEach(tclVariable -> {
             try {
                 tclVariable.decodeValue();
@@ -62,14 +68,16 @@ public class TCLVariableService {
 
 
     public void saveVariables(List<TCLVariable> variables) throws IOException {
+        StringBuilder sqlBuilder = new StringBuilder();
+        String formatString = FORMAT_FOR_INSERT_VARIABLES;
         for (TCLVariable variable : variables) {
             variable.encodeValue(variable.getDeserializedValue());
-            tclVariableRepository.insert(
-                    variable.getId(),
-                    variable.getKey(),
-                    variable.getValue(),
-                    variable.getExecutionId()
-            );
+            sqlBuilder.append(String.format(formatString, variable.getId(), variable.getKey(), variable.getValue(), variable.getExecutionId()));
+            formatString = ", " + FORMAT_FOR_INSERT_VARIABLES;
+        }
+        if (!sqlBuilder.isEmpty()) {
+            String sqlForExecute = String.format(SQL_INSERT_MERGE, sqlBuilder);
+            jdbcTemplate.execute(sqlForExecute);
         }
     }
 }
