@@ -3,6 +3,7 @@ package ru.system.thundercloud.service.config.process;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
@@ -19,7 +20,7 @@ import ru.system.thundercloud.service.delegate.ThunderCloudStartDelegate;
 public class ConfigThunderCloudProcess {
 
     @Bean
-    public ThunderCloudProcess getThunderCloudProcess(ThunderCloudStartDelegate startDelegate, ThunderCloudEndDelegate endDelegate) {
+    public ThunderCloudProcess getThunderCloudProcess(ThunderCloudStartDelegate startDelegate, ThunderCloudEndDelegate endDelegate, DataSourceTransactionManager dataSourceTransactionManager) {
 
         ThunderCloudTask tasks = ThunderCloudTask
                 .creator()
@@ -35,6 +36,7 @@ public class ConfigThunderCloudProcess {
                 .nextGetaway("getaway-3", 60L)
                 .delegate(startDelegate, tcvm -> {
                     String v1 = tcvm.get("Var1", String.class);
+                    System.out.println("!!!! Var1= " + v1);
                     return StringUtils.isNotBlank(v1);
                 })
                 .delegate(endDelegate)

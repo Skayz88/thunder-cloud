@@ -28,7 +28,7 @@ public class ThunderCloudEndDelegate extends ThunderCloudDelegate {
     @Override
     public void execute(ThunderCloudVariableMap tclVariableMap) {
         System.out.println("ThunderCloudEndDelegate.execute().start()");
-        System.out.println("tclVariableMap.old="+tclVariableMap);
+        //System.out.println("tclVariableMap.old="+tclVariableMap);
        //tclVariableMap.put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         //System.out.println("tclVariableMap.new="+tclVariableMap);
         System.out.println("ThunderCloudEndDelegate.execute().end()");

@@ -18,6 +18,7 @@ public class ThunderCloudDelegateWithSupplier {
     }
 
     public void execute(ThunderCloudVariableMap tclVariableMap) {
+        System.out.println("ThunderCloudDelegateWithSupplier execute");
         if (Boolean.TRUE.equals(function.apply(tclVariableMap))) delegate.execute(tclVariableMap);
     }
 

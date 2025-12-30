@@ -34,12 +34,12 @@ public class ThunderCloudStartDelegate extends ThunderCloudDelegate {
     public void execute(ThunderCloudVariableMap tclVariableMap) {
         Integer intRundom = ThreadLocalRandom.current().nextInt(300, 500);
         System.out.println("ThunderCloudStartDelegate.execute().start()");
-        System.out.println("tclVariableMap.old="+tclVariableMap);
+        //System.out.println("tclVariableMap.old="+tclVariableMap);
         String s = tclVariableMap.get("Var1").toString();
         Integer integer = Integer.valueOf(s);
         integer = integer.intValue() + intRundom;
         tclVariableMap.put("Var1", String.valueOf(integer));
-        System.out.println("tclVariableMap.new="+tclVariableMap.toString());
+       // System.out.println("tclVariableMap.new="+tclVariableMap.toString());
         System.out.println("ThunderCloudStartDelegate.execute().end()");
         try {
 
