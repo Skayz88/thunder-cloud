@@ -46,7 +46,7 @@ public class RunnerService implements CommandLineRunner {
     private CompletableFuture<String> nextStepOnFuture(String executionId) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                for (int i = 1; i <= 2; i++) {
+                for (int i = 1; i <= 1; i++) {
                     engine.executionTask(executionId, "task-1");
                 }
                 return executionId;
@@ -69,11 +69,12 @@ public class RunnerService implements CommandLineRunner {
         String executionId = engine.startNewExecutionForProcess(process.getName(), tclVariableMap);
 
         for (int i = 1; i <= 1; i++) {
-
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!");
             CompletableFuture<String> exec_1 = nextStepOnFuture(executionId);
+            Thread.sleep(100);
             CompletableFuture<String> exec_2 = nextStepOnFuture(executionId);
-            CompletableFuture<String> exec_3 = nextStepOnFuture(executionId);
-            CompletableFuture<String> exec_4 = nextStepOnFuture(executionId);
+//            CompletableFuture<String> exec_3 = nextStepOnFuture(executionId);
+//            CompletableFuture<String> exec_4 = nextStepOnFuture(executionId);
 
 
 //            CompletableFuture<String> exec_1 = nextStepOnFuture(tclVariableMap);
@@ -100,7 +101,8 @@ public class RunnerService implements CommandLineRunner {
 
             CompletableFuture.allOf(exec_1
                     ,
-                    exec_2, exec_3, exec_4
+                    exec_2
+                    //, exec_3, exec_4
 //                    ,
 //                    exec_1_1,exec_2_1,exec_3_1,exec_4_1
 //                    ,
