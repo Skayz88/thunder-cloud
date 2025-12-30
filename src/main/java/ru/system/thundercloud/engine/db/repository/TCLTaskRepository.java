@@ -24,6 +24,10 @@ public interface TCLTaskRepository extends ListCrudRepository<TCLTask, String> {
                 @Param("expires_at") Instant expiresAt,
                 @Param("execution_id") String execution_id);
 
+    @Transactional
+    @Query(value = "SELECT * FROM tcl_task WHERE id= :id FOR UPDATE")
+    TCLTask selectForUpdateTask(@Param("id") String id);
+
 
     @Transactional
     @Modifying

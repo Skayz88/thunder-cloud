@@ -2,11 +2,13 @@ package ru.system.thundercloud.engine.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.system.thundercloud.engine.db.ThunderCloudDataBaseEngine;
 import ru.system.thundercloud.engine.db.dto.ProcessExecutionTask;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
+import ru.system.thundercloud.engine.db.tables.TCLTask;
 import ru.system.thundercloud.engine.exceptions.ProcessNotFoundException;
 import ru.system.thundercloud.engine.exceptions.TCLVariablesErrorException;
 import ru.system.thundercloud.engine.service.process.ThunderCloudDelegateWithSupplier;
@@ -68,12 +70,14 @@ public class ThunderCloudEngine {
         thunderCloudDataBaseEngine.updateTaskOnSetCompletedIfTimeOver();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
     public String executionTask(String executionId, String taskName) {
 
         TCLExecution tclExecution = thunderCloudDataBaseEngine.executionById(executionId);
 
         ProcessExecutionTask processExecutionTask = thunderCloudDataBaseEngine.getProcessExecutionTaskByExecutionId(executionId);
+
+        TCLTask tclTask =  thunderCloudDataBaseEngine.getTCLTaskForUpdate(processExecutionTask.taskId());
 
         ThunderCloudProcess thunderCloudProcess = processMap.get(processExecutionTask.processName());
 
@@ -111,7 +115,7 @@ public class ThunderCloudEngine {
                 throw new TCLVariablesErrorException(e.getMessage());
             }
         } else {
-            thunderCloudDataBaseEngine.setNewGetawayForTaskInNewTransactional(executionId, task.getNextGetaway(),
+            thunderCloudDataBaseEngine.setNewGetawayForTask(executionId, task.getNextGetaway(),
                     isEndGetawayOnNext(task.getNextGetaway()), task.getTimerMinutes());
         }
 

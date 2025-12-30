@@ -25,6 +25,10 @@ public class TCLTaskService {
         tclTaskRepository.insert(tclTask.id(), tclTask.name(), tclTask.completed(), tclTask.expires_at(), tclTask.execution_id());
     }
 
+    public TCLTask selectTaskByIdForUpdate(String id) {
+        return tclTaskRepository.selectForUpdateTask(id);
+    }
+
     public void updateTaskOnNewGetaway(String name, Boolean completed, String execution_id, Long timeDuration) {
         tclTaskRepository.updateTaskOnNewGetaway(name, completed, Instant.now().plus(Duration.ofMinutes(timeDuration)), execution_id);
     }

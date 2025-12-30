@@ -82,12 +82,21 @@ public class ThunderCloudDataBaseEngine {
 
     }
 
+    public TCLTask getTCLTaskForUpdate(String taskId) {
+        return tclTaskService.selectTaskByIdForUpdate(taskId);
+    }
+
     public void setNewGetawayForTask(String executionId, String getaway, Boolean completed, Long timeDuration) {
         tclTaskService.updateTaskOnNewGetaway(getaway, completed, executionId, timeDuration);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveNewGetawayForTaskAndVariables(String executionId, String getaway, Boolean completed, Long timeDuration, ThunderCloudVariableMap tclVariablesMap) throws IOException {
+        setNewGetawayForTask(executionId, getaway, completed, timeDuration);
+        saveTCLVariableForThisProcess(tclVariablesMap);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveNewGetawayForTaskAndVariablesInNewTransactional(String executionId, String getaway, Boolean completed, Long timeDuration, ThunderCloudVariableMap tclVariablesMap) throws IOException {
         setNewGetawayForTask(executionId, getaway, completed, timeDuration);
         saveTCLVariableForThisProcess(tclVariablesMap);
     }
