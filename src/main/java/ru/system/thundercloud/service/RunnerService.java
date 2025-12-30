@@ -42,6 +42,21 @@ public class RunnerService implements CommandLineRunner {
         });
     }
 
+
+    private CompletableFuture<String> nextStepOnFuture(String executionId) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                for (int i = 1; i <= 1; i++) {
+                    engine.executionTask(executionId, "task-1");
+                }
+                return executionId;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -51,7 +66,14 @@ public class RunnerService implements CommandLineRunner {
         tclVariableMap.put("Var1", "1");
         tclVariableMap.put("Var2", "1000");
 
-        for (int i = 1; i <= 5; i++) {
+        String executionId = engine.startNewExecutionForProcess(process.getName(), tclVariableMap);
+
+        for (int i = 1; i <= 1; i++) {
+
+            CompletableFuture<String> exec_1 = nextStepOnFuture(executionId);
+            CompletableFuture<String> exec_2 = nextStepOnFuture(executionId);
+            CompletableFuture<String> exec_3 = nextStepOnFuture(executionId);
+            CompletableFuture<String> exec_4 = nextStepOnFuture(executionId);
 
 
 //            CompletableFuture<String> exec_1 = nextStepOnFuture(tclVariableMap);
@@ -76,15 +98,15 @@ public class RunnerService implements CommandLineRunner {
 //            CompletableFuture<String> exec_3_3 = nextStepOnFuture(tclVariableMap);
 //            CompletableFuture<String> exec_4_3 = nextStepOnFuture(tclVariableMap);
 
-//            CompletableFuture.allOf(exec_1
-//                    ,
-//                    exec_2, exec_3, exec_4
+            CompletableFuture.allOf(exec_1
+                    ,
+                    exec_2, exec_3, exec_4
 //                    ,
 //                    exec_1_1,exec_2_1,exec_3_1,exec_4_1
 //                    ,
 //                    exec_1_2,exec_2_2
 //                    ,exec_3_2,exec_4_2,exec_1_3,exec_2_3,exec_3_3,exec_4_3
-//                    ).join();
+                    ).join();
 
 
             //String executionId = engine.startNewExecutionForProcess(process.getName(), tclVariableMap);
@@ -103,7 +125,7 @@ public class RunnerService implements CommandLineRunner {
 
         //String executionId = engine.startNewExecutionForProcess(process.getName(), tclVariableMap);
 
-        //String executionId = engine.executionTask("595c40a7-40a1-41b5-ad62-b931f2bc4873", "task-1");
+        //String executionId = engine.executionTask("25f84944-aadb-47d6-b3dd-34297d4816d8", "task-1");
 
         System.out.println("Приложение запущено успешно! ");
     }
