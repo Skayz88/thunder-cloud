@@ -1,5 +1,6 @@
 package ru.system.thundercloud.service.config.process;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.system.thundercloud.engine.service.process.ThunderCloudExecution;
@@ -32,7 +33,10 @@ public class ConfigThunderCloudProcess {
                 .creator()
                 .name("task-1")
                 .nextGetaway("getaway-3", 60L)
-                .delegate(startDelegate)
+                .delegate(startDelegate, tcvm -> {
+                    String v1 = tcvm.get("Var1", String.class);
+                    return StringUtils.isNotBlank(v1);
+                })
                 .delegate(endDelegate)
                 .create();
 

@@ -78,6 +78,17 @@ public class ThunderCloudVariableMap {
         return null;
     }
 
+    public <T> T get(String key, Class <T> type) {
+        if (tclVariableMap.containsKey(key)) {
+            ThunderCloudVariable thunderCloudVariable = tclVariableMap.get(key);
+            if (type.isInstance(thunderCloudVariable.getValue())) {
+                return type.cast(thunderCloudVariable.getValue());
+            }
+
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return tclVariableMap.toString();
