@@ -9,7 +9,7 @@ import ru.system.thundercloud.engine.db.dto.ProcessExecutionTask;
 import ru.system.thundercloud.engine.db.tables.TCLExecution;
 import ru.system.thundercloud.engine.exceptions.ProcessNotFoundException;
 import ru.system.thundercloud.engine.exceptions.TCLVariablesErrorException;
-import ru.system.thundercloud.engine.service.process.ThunderCloudDelegate;
+import ru.system.thundercloud.engine.service.process.ThunderCloudDelegateWithSupplier;
 import ru.system.thundercloud.engine.service.process.ThunderCloudGetaway;
 import ru.system.thundercloud.engine.service.process.ThunderCloudProcess;
 import ru.system.thundercloud.engine.service.process.ThunderCloudTask;
@@ -96,7 +96,7 @@ public class ThunderCloudEngine {
                 + " и заданием- " + taskName
         );
 
-        List<ThunderCloudDelegate> delegates = task.getDelegates();
+        List<ThunderCloudDelegateWithSupplier> delegates = task.getDelegates();
 
         if (Objects.nonNull(delegates) && !delegates.isEmpty()) {
             ThunderCloudVariableMap tclVariablesMap = thunderCloudDataBaseEngine.getTCLVariablesForThisExecution(executionId);
