@@ -65,6 +65,13 @@ public class ThunderCloudTask {
             return this;
         }
 
+        public ThunderCloudTaskCreator delegate(ThunderCloudDelegate delegate) {
+            this.delegates.add(delegate);
+            return this;
+        }
+
+
+
         public ThunderCloudTaskCreator nextGetaway(String nextGetaway) {
             this.nextGetaway = nextGetaway;
             return this;

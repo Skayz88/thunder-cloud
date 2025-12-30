@@ -25,29 +25,23 @@ public class ConfigThunderCloudProcess {
                 .creator()
                 .name("task-1")
                 .nextGetaway("getaway-2")
-                .delegates(ThunderCloudDelegate.creator()
-                        .add(startDelegate)
-                        .add(endDelegate)
-                        .create())
+                .delegate(startDelegate)
+                .delegate(endDelegate)
                 .create();
 
         ThunderCloudTask tasks_2 = ThunderCloudTask
                 .creator()
                 .name("task-1")
                 .nextGetaway("getaway-3", 60L)
-                .delegates(ThunderCloudDelegate.creator()
-                        .add(startDelegate)
-                        .add(endDelegate)
-                        .create())
+                .delegate(startDelegate)
+                .delegate(endDelegate)
                 .create();
 
         ThunderCloudTask tasks_3 = ThunderCloudTask
                 .creator()
                 .name("task-1")
-                .delegates(ThunderCloudDelegate.creator()
-                        .add(startDelegate)
-                        .add(endDelegate)
-                        .create())
+                .delegate(startDelegate)
+                .delegate(endDelegate)
                 .create();
 
         ThunderCloudGetaway getaway = ThunderCloudGetaway
