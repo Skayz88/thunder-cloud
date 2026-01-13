@@ -19,8 +19,6 @@ import ru.system.thundercloud.service.delegate.ThunderCloudStartDelegate;
  */
 
 @Configuration
-@EnableTransactionManagement
-@EnableAsync
 public class ConfigThunderCloudProcess {
 
     @Bean
